@@ -59,6 +59,7 @@ class Engine(BaseEngine):
             for frame in ImageSequence.Iterator(img):
                 frames.append(frame.convert('P'))
             img.seek(0)
+            self.frame_count = len(frames)
             return frames
 
         return img
@@ -97,7 +98,7 @@ class Engine(BaseEngine):
         self.image = self.image.transpose(Image.FLIP_LEFT_RIGHT)
 
     def read(self, extension=None, quality=None):
-        #returns image buffer in byte format.
+        # returns image buffer in byte format.
         img_buffer = BytesIO()
 
         ext = extension or self.extension
@@ -154,7 +155,7 @@ class Engine(BaseEngine):
         except KeyError:
             logger.exception('Image format not found in PIL: %s' % ext)
 
-            #extension is not present or could not help determine format => force JPEG
+            # extension is not present or could not help determine format => force JPEG
             if self.image.mode in ['P', 'RGBA', 'LA']:
                 self.image.format = FORMATS['.png']
                 self.image.save(img_buffer, FORMATS['.png'])
